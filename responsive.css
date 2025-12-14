@@ -1,0 +1,87 @@
+/* ========== RESPONSIVE FIXES - ADD THIS AT THE END ========== */
+
+/* Tablet Landscape */
+@media (max-width: 1200px) {
+    .cards-orbit {
+        width: 800px !important;
+        height: 800px !important;
+    }
+    
+    .floating-card {
+        width: 110px !important;
+        height: 110px !important;
+        border-radius: 24px !important;
+    }
+}
+
+/* Tablet Portrait */
+@media (max-width: 1024px) {
+    .cards-orbit {
+        width: 650px !important;
+        height: 650px !important;
+    }
+    
+    .floating-card {
+        width: 90px !important;
+        height: 90px !important;
+        border-radius: 22px !important;
+    }
+}
+
+/* Mobile Landscape */
+@media (max-width: 768px) {
+    .cards-orbit {
+        width: 500px !important;
+        height: 500px !important;
+    }
+    
+    .floating-card {
+        width: 75px !important;
+        height: 75px !important;
+        border-radius: 18px !important;
+    }
+    
+    .main-title {
+        font-size: 36px !important;
+    }
+    
+    .subtitle {
+        font-size: 15px !important;
+    }
+}
+
+/* Mobile Portrait */
+@media (max-width: 480px) {
+    .cards-orbit {
+        width: 350px !important;
+        height: 350px !important;
+    }
+    
+    .floating-card {
+        width: 55px !important;
+        height: 55px !important;
+        border-radius: 14px !important;
+    }
+    
+    .main-title {
+        font-size: 28px !important;
+    }
+}
+
+/* Very Small Mobile */
+@media (max-width: 375px) {
+    .cards-orbit {
+        width: 300px !important;
+        height: 300px !important;
+    }
+    
+    .floating-card {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 12px !important;
+    }
+    
+    .main-title {
+        font-size: 24px !important;
+    }
+}
