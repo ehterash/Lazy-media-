@@ -12,6 +12,7 @@ import { HolographicShowcase } from './components/sections/HolographicShowcase';
 import { MatrixBackground } from './components/ui/MatrixBackground';
 import { ParticleField } from './components/ui/ParticleField';
 import { LoadingScreen } from './components/ui/LoadingScreen';
+import { AIChatWidget } from './components/features/AIChatWidget';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -79,6 +80,9 @@ function App() {
           <SocialProof /> {/* Testimonials */}
         </main>
         <Footer />
+        
+        {/* Active AI Chat Widget */}
+        <AIChatWidget />
       </div>
     </div>
   );
