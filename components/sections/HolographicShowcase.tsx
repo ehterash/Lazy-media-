@@ -210,12 +210,14 @@ const HoloCard: React.FC<{ product: ProductCard }> = ({ product }) => {
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        // Optimized: Reduced backdrop-blur-xl to backdrop-blur-md for scroll performance
         className="relative w-full h-full rounded-[30px] transition-transform duration-300 ease-out preserve-3d will-change-transform"
       >
         <div className="absolute -inset-[2px] rounded-[32px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-0 animate-border-spin" />
         <div className="absolute -inset-[1px] rounded-[31px] bg-[#0B0B0F] z-0" />
 
-        <div className="absolute inset-0 rounded-[30px] overflow-hidden bg-[#13131a]/80 backdrop-blur-xl border border-white/10 shadow-2xl z-10 flex flex-col">
+        {/* Optimized: Reduced blur */}
+        <div className="absolute inset-0 rounded-[30px] overflow-hidden bg-[#13131a]/80 backdrop-blur-md border border-white/10 shadow-2xl z-10 flex flex-col">
           
           <div 
             ref={glowRef}
@@ -282,7 +284,8 @@ export const HolographicShowcase: React.FC = () => {
   }, [isPaused]);
 
   return (
-    <section className="py-32 relative bg-[#0B0B0F]/30 backdrop-blur-sm overflow-hidden">
+    // Optimized: Removed backdrop-blur-sm from section background
+    <section className="py-32 relative bg-[#0B0B0F]/30 overflow-hidden">
       <style>{`
         .perspective-1000 { perspective: 1000px; }
         .preserve-3d { transform-style: preserve-3d; }
@@ -328,7 +331,7 @@ export const HolographicShowcase: React.FC = () => {
       >
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto gap-8 px-6 md:px-[calc(50vw-200px)] py-12 snap-x snap-mandatory hide-scrollbar"
+          className="flex overflow-x-auto gap-8 px-6 md:px-[calc(50vw-200px)] py-12 snap-x snap-mandatory hide-scrollbar will-change-transform"
         >
           {PRODUCTS.map((product) => (
             <HoloCard key={product.id} product={product} />

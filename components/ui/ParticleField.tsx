@@ -15,8 +15,7 @@ export const ParticleField: React.FC = () => {
     canvas.height = h;
 
     // Optimized Particle System
-    // Reduced count for stable 60fps on most devices
-    const particleCount = 75; 
+    const particleCount = 60; // Slightly reduced for mobile smoothness
     const particles = Array.from({ length: particleCount }).map(() => ({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -43,7 +42,9 @@ export const ParticleField: React.FC = () => {
     const animate = () => {
       ctx.clearRect(0, 0, w, h);
       
-      particles.forEach((p) => {
+      for (let i = 0; i < particleCount; i++) {
+        const p = particles[i];
+        
         // Simpler organic movement
         p.angle += p.spinSpeed;
         p.x += p.vx + Math.sin(p.angle) * 0.2;
@@ -79,16 +80,16 @@ export const ParticleField: React.FC = () => {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Optimized Connections: Only check neighbors if they are somewhat close in array
-        // (Approximation for performance, not perfect spatial hash but better than O(N^2))
-        particles.forEach((p2) => {
-           if (p === p2) return;
+        // Optimized Connections: Avoid double checking by starting j from i+1
+        for (let j = i + 1; j < particleCount; j++) {
+           const p2 = particles[j];
            const ddx = p.x - p2.x;
+           
            // Quick AABB check before sqrt
-           if (Math.abs(ddx) > 100) return;
+           if (Math.abs(ddx) > 100) continue;
            
            const ddy = p.y - p2.y;
-           if (Math.abs(ddy) > 100) return;
+           if (Math.abs(ddy) > 100) continue;
 
            const ddistSq = ddx*ddx + ddy*ddy;
            
@@ -101,8 +102,8 @@ export const ParticleField: React.FC = () => {
               ctx.lineTo(p2.x, p2.y);
               ctx.stroke();
            }
-        });
-      });
+        }
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };

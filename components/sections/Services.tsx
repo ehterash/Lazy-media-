@@ -73,7 +73,8 @@ const HolographicCard: React.FC<{ item: FeatureItem; index: number }> = ({ item,
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className={`group relative p-8 rounded-3xl bg-[#13131a]/60 border border-white/5 backdrop-blur-xl h-[320px] flex flex-col justify-between overflow-hidden cursor-default hover:shadow-2xl hover:shadow-black/50 will-change-transform`}
+        // Optimized: Reduced backdrop-blur-xl to backdrop-blur-md for performance
+        className={`group relative p-8 rounded-3xl bg-[#13131a]/60 border border-white/5 backdrop-blur-md h-[320px] flex flex-col justify-between overflow-hidden cursor-default hover:shadow-2xl hover:shadow-black/50 will-change-transform`}
       >
         {/* Holographic Gradient Overlay - Follows Mouse */}
         <div 
@@ -182,7 +183,8 @@ export const Services: React.FC = () => {
   ];
 
   return (
-    <section id="services" className="py-32 bg-[#0a0a0f]/30 backdrop-blur-sm scroll-mt-24 relative overflow-hidden">
+    // Optimized: Removed backdrop-blur-sm
+    <section id="services" className="py-32 bg-[#0a0a0f]/30 scroll-mt-24 relative overflow-hidden">
       {/* Background Gradient Spot */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
 
