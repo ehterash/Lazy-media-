@@ -4,8 +4,15 @@ export const CustomCursor: React.FC = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); // Hidden by default
 
   useEffect(() => {
+    // Detect touch device - simplistic check but effective for initial load
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) return; // Don't run cursor logic on mobile
+
+    setIsVisible(true);
+
     const updateCursor = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
       
@@ -31,18 +38,20 @@ export const CustomCursor: React.FC = () => {
     };
   }, []);
 
+  if (!isVisible) return null;
+
   return (
     <>
       <style>{`
-        @keyframes spin-slow {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        body { cursor: none; } /* Only hide default cursor if custom one is active */
+        @media (pointer: coarse) {
+            body { cursor: auto; }
         }
       `}</style>
       
       {/* Main Cursor Dot */}
       <div 
-        className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference transition-transform duration-100 ease-out will-change-transform"
+        className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference transition-transform duration-100 ease-out will-change-transform hidden md:block"
         style={{ 
           transform: `translate(${position.x - 8}px, ${position.y - 8}px) scale(${isPointer ? 1.5 : 1})`,
         }}
@@ -50,7 +59,7 @@ export const CustomCursor: React.FC = () => {
       
       {/* Trailing Ring */}
       <div 
-        className={`fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none z-[9998] transition-all duration-500 ease-out will-change-transform border border-white/20 ${isClicking ? 'scale-50 opacity-80' : 'scale-100 opacity-100'}`}
+        className={`fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none z-[9998] transition-all duration-500 ease-out will-change-transform border border-white/20 hidden md:block ${isClicking ? 'scale-50 opacity-80' : 'scale-100 opacity-100'}`}
         style={{ 
           // Center the ring
           left: position.x - 24,

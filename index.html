@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Lazy - Next-Gen AI Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -84,9 +84,11 @@
         color: #ffffff;
         overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
+        /* Prevent elastic scrolling on iOS which can look glitchy with custom scroll */
+        overscroll-behavior-y: none; 
       }
       
-      /* Film Noise Texture for Premium Feel - Optimized */
+      /* Optimized Noise Texture - Replaced heavy SVG filter with CSS pattern */
       body::before {
         content: "";
         position: fixed;
@@ -94,12 +96,13 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-        opacity: 0.03; /* Reduced opacity to remove need for blend mode */
+        /* Lightweight base64 noise pattern */
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0.04; 
         pointer-events: none;
         z-index: 9999;
-        /* Removed mix-blend-mode: overlay for performance */
-        transform: translateZ(0); /* Force hardware acceleration */
+        /* Hardware acceleration hint */
+        transform: translateZ(0);
       }
 
       .glass-card {
@@ -108,7 +111,7 @@
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.08);
         transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        will-change: transform, box-shadow;
+        /* Removed 'will-change: transform' to prevent mobile memory crash */
       }
       .glass-card:hover {
         background: rgba(30, 30, 45, 0.8);
@@ -148,9 +151,10 @@
         animation: shake 0.4s ease-in-out;
       }
 
-      /* Performance Optimization */
+      /* Performance Optimization Class */
+      /* Only use on specific heavy elements, not globally */
       .will-change-transform {
-        will-change: transform;
+        /* will-change: transform; - Disabled globally to save memory on mobile */
       }
 
       /* Custom Scrollbar */

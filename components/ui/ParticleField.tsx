@@ -6,7 +6,7 @@ export const ParticleField: React.FC = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true }); // Optimized context
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let w = window.innerWidth;
@@ -14,18 +14,20 @@ export const ParticleField: React.FC = () => {
     canvas.width = w;
     canvas.height = h;
 
-    // Optimized Particle System
-    const particleCount = 60; // Slightly reduced for mobile smoothness
+    // Mobile Optimization: Check screen size
+    const isMobile = w < 768;
+    const particleCount = isMobile ? 25 : 60; // Reduce from 60 to 25 on mobile
+
     const particles = Array.from({ length: particleCount }).map(() => ({
       x: Math.random() * w,
       y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.2, 
-      vy: (Math.random() - 0.5) * 0.2,
+      vx: (Math.random() - 0.5) * (isMobile ? 0.1 : 0.2), // Slower movement on mobile
+      vy: (Math.random() - 0.5) * (isMobile ? 0.1 : 0.2),
       size: Math.random() * 2 + 0.5,
       alpha: Math.random() * 0.5 + 0.1,
       targetAlpha: Math.random() * 0.5 + 0.1,
       angle: Math.random() * Math.PI * 2,
-      spinSpeed: (Math.random() - 0.5) * 0.01 // Slower spin
+      spinSpeed: (Math.random() - 0.5) * 0.01
     }));
 
     let mouseX = -1000;
@@ -35,7 +37,11 @@ export const ParticleField: React.FC = () => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    
+    // Only listen to mouse move on desktop to save resources
+    if (!isMobile) {
+        window.addEventListener('mousemove', handleMouseMove);
+    }
 
     let animationFrameId: number;
 
@@ -45,47 +51,43 @@ export const ParticleField: React.FC = () => {
       for (let i = 0; i < particleCount; i++) {
         const p = particles[i];
         
-        // Simpler organic movement
         p.angle += p.spinSpeed;
         p.x += p.vx + Math.sin(p.angle) * 0.2;
         p.y += p.vy + Math.cos(p.angle) * 0.2;
 
-        // Twinkle Effect (Smoothed)
         if (Math.abs(p.targetAlpha - p.alpha) < 0.01) {
             p.targetAlpha = Math.random() * 0.8 + 0.1;
         }
         p.alpha += (p.targetAlpha - p.alpha) * 0.05;
 
-        // Interactive Repulsion
-        const dx = mouseX - p.x;
-        const dy = mouseY - p.y;
-        const distSq = dx * dx + dy * dy; // Distance Squared is faster
-        
-        if (distSq < 40000) { // 200 * 200
-            const dist = Math.sqrt(distSq);
-            const force = (200 - dist) / 200;
-            p.x -= dx * force * 0.05;
-            p.y -= dy * force * 0.05;
+        // Interaction only on desktop
+        if (!isMobile) {
+            const dx = mouseX - p.x;
+            const dy = mouseY - p.y;
+            const distSq = dx * dx + dy * dy;
+            
+            if (distSq < 40000) {
+                const dist = Math.sqrt(distSq);
+                const force = (200 - dist) / 200;
+                p.x -= dx * force * 0.05;
+                p.y -= dy * force * 0.05;
+            }
         }
 
-        // Screen Wrapping
         if (p.x < -20) p.x = w + 20;
         if (p.x > w + 20) p.x = -20;
         if (p.y < -20) p.y = h + 20;
         if (p.y > h + 20) p.y = -20;
 
-        // Draw Particle
         ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Optimized Connections: Avoid double checking by starting j from i+1
         for (let j = i + 1; j < particleCount; j++) {
            const p2 = particles[j];
            const ddx = p.x - p2.x;
            
-           // Quick AABB check before sqrt
            if (Math.abs(ddx) > 100) continue;
            
            const ddy = p.y - p2.y;
@@ -93,7 +95,7 @@ export const ParticleField: React.FC = () => {
 
            const ddistSq = ddx*ddx + ddy*ddy;
            
-           if (ddistSq < 10000) { // 100 * 100
+           if (ddistSq < 10000) {
               const ddist = Math.sqrt(ddistSq);
               ctx.strokeStyle = `rgba(255, 255, 255, ${Math.min(p.alpha, p2.alpha) * 0.1 * (1 - ddist/100)})`;
               ctx.lineWidth = 0.5;
