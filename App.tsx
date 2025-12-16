@@ -46,6 +46,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white selection:bg-purple-500 selection:text-white relative">
+      
+      {/* The LoadingScreen sits on top (z-index 9999) and handles its own exit animation */}
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       
       {/* Background Layers */}
@@ -66,8 +68,8 @@ function App() {
         </div>
       )}
 
-      {/* Content wrapper */}
-      <div className={`relative z-10 transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+      {/* Content wrapper - Removed opacity transition to allow Shutter Reveal */}
+      <div className="relative z-10">
         <Header />
         <main>
           <Hero />
