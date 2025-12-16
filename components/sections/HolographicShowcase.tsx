@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Bot, Eye, BarChart3, Mic, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -324,17 +323,17 @@ export const HolographicShowcase: React.FC = () => {
       `}</style>
 
       {/* Section Header */}
-      <div className="container mx-auto px-6 mb-16 relative z-10 text-center">
-        <Reveal>
+      <div className="container mx-auto px-6 mb-16 relative z-10 flex flex-col items-center text-center">
+        <Reveal width="fit-content">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-900/20 border border-cyan-500/30 mb-6 backdrop-blur-sm">
              <Sparkles size={14} className="text-cyan-400" />
              <span className="text-xs font-bold text-cyan-300 uppercase tracking-widest">Innovation Showcase</span>
           </div>
         </Reveal>
-        <Reveal delay={100}>
+        <Reveal delay={100} width="100%">
           <h2 className="text-4xl md:text-6xl font-bold mb-6">Future-Ready AI Products.</h2>
         </Reveal>
-        <Reveal delay={200}>
+        <Reveal delay={200} width="100%">
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">Explore our suite of next-generation tools designed to integrate seamlessly into your digital ecosystem.</p>
         </Reveal>
       </div>
