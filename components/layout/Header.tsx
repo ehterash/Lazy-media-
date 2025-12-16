@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -6,10 +5,14 @@ import { Button } from '../ui/Button';
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    // Entrance Animation
+    setIsVisible(true);
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -36,98 +39,82 @@ export const Header: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleContactClick = () => {
-    const element = document.getElementById('contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    } else {
-        // Fallback if contact section doesn't exist, just scroll bottom
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
-  };
+  const brandGradient = "linear-gradient(135deg, #7C3AED, #4F46E5)";
 
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 h-[72px] flex items-center ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] flex items-center ${
           isScrolled 
-            ? 'bg-[#0B0B0F]/80 backdrop-blur-xl border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]' 
-            : 'bg-transparent border-b border-transparent'
-        }`}
+            ? 'h-[60px] bg-[#0B0B0F]/80 backdrop-blur-xl border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]' 
+            : 'h-[80px] bg-transparent border-b border-transparent'
+        } ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}
       >
-        {/* Header specific styles for animations */}
-        <style>{`
-          @keyframes textShimmer {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-          }
-          .animate-text-shimmer {
-            background-size: 200% auto;
-            animation: textShimmer 3s linear infinite;
-          }
-          @keyframes logoFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-3px) rotate(2deg); }
-            75% { transform: translateY(3px) rotate(-2deg); }
-          }
-          .animate-logo-float {
-            animation: logoFloat 4s ease-in-out infinite;
-          }
-        `}</style>
-
         <div className="container mx-auto px-6 flex items-center justify-between h-full">
           
-          {/* LEFT SIDE: Branding (Logo + Text) */}
+          {/* Logo */}
           <div 
              className="flex items-center gap-3 cursor-pointer group" 
              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            {/* Logo Icon */}
-            <div className="w-10 h-10 relative perspective-1000 animate-logo-float">
-               <div className="w-full h-full bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg shadow-lg flex items-center justify-center transition-transform duration-700 group-hover:[transform:rotateY(180deg)] preserve-3d">
-                  <div className="w-4 h-4 bg-white rounded-full opacity-90 shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" />
+            <div className={`relative transition-all duration-500 perspective-1000 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'}`}>
+               <div 
+                 className="w-full h-full rounded-lg shadow-lg flex items-center justify-center transition-transform duration-700 group-hover:[transform:rotateY(180deg)] preserve-3d"
+                 style={{ background: brandGradient }}
+               >
+                  <div className="w-3 h-3 bg-white rounded-full opacity-90 shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" />
                </div>
             </div>
-
-            {/* Brand Text */}
-            <span className="text-[24px] font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-white animate-text-shimmer group-hover:from-purple-400 group-hover:via-cyan-300 group-hover:to-purple-400 transition-all duration-300">
+            <span 
+              className={`font-extrabold tracking-tight text-transparent bg-clip-text animate-text-shimmer transition-all duration-500 ${isScrolled ? 'text-[20px]' : 'text-[24px]'}`}
+              style={{ 
+                backgroundImage: 'linear-gradient(to right, #ffffff, #d8b4fe, #ffffff)',
+                backgroundSize: '200% auto'
+              }}
+            >
               Lazy
             </span>
           </div>
 
-          {/* CENTER: Desktop Nav */}
+          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link, idx) => (
               <a 
                 key={link.name} 
                 href={link.href} 
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 group"
+                className={`relative text-sm font-medium text-gray-300 hover:text-white transition-all duration-300 py-2 group ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}
+                style={{ transitionDelay: `${idx * 100 + 200}ms` }}
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300 group-hover:w-full" />
+                <span 
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 transition-all duration-300 group-hover:w-full" 
+                  style={{ background: brandGradient }}
+                />
+                <span className="absolute inset-0 bg-white/5 scale-0 rounded-lg group-hover:scale-100 transition-transform duration-300 -z-10" />
               </a>
             ))}
           </nav>
 
-          {/* RIGHT SIDE: Action Button & Mobile Toggle */}
-          <div className="flex items-center gap-4">
+          {/* Right Action */}
+          <div className={`flex items-center gap-4 transition-all duration-500 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`} style={{ transitionDelay: '500ms' }}>
             <div className="hidden md:flex items-center">
               <Button 
                 variant="white" 
                 size="sm" 
-                className="!px-6 !py-2.5 !text-sm !font-bold relative overflow-hidden active:scale-95 transition-transform"
-                onClick={handleContactClick}
+                magnetic
+                className="!px-6 !py-2.5 !text-sm !font-bold"
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                <span className="relative z-10">Let's Talk</span>
+                Let's Talk
               </Button>
             </div>
 
             <button 
-              className="md:hidden text-white p-2 hover:bg-white/5 rounded-lg transition-colors"
+              className="md:hidden text-white p-2 hover:bg-white/5 rounded-lg transition-transform active:scale-90"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMobileMenuOpen ? <X size={24} className="animate-spin" /> : <Menu size={24} />}
             </button>
           </div>
 
@@ -136,7 +123,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Menu */}
       <div 
-        className={`fixed inset-0 bg-[#0B0B0F]/95 backdrop-blur-xl z-40 transition-transform duration-300 pt-[72px] ${
+        className={`fixed inset-0 bg-[#0B0B0F]/95 backdrop-blur-xl z-40 transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)] pt-[80px] ${
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -146,19 +133,18 @@ export const Header: React.FC = () => {
               key={link.name} 
               href={link.href} 
               onClick={(e) => handleNavClick(e, link.href)}
-              className="text-3xl font-bold text-gray-300 hover:text-white hover:translate-x-4 transition-all duration-300"
-              style={{ transitionDelay: `${i * 50}ms` }}
+              className={`text-3xl font-bold text-gray-300 hover:text-white hover:translate-x-4 transition-all duration-300 transform ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-20 opacity-0'}`}
+              style={{ transitionDelay: `${i * 75}ms` }}
             >
               {link.name}
             </a>
           ))}
-          {/* Mobile Action Button */}
-          <div className="mt-4">
+          <div className={`mt-4 transform ${isMobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`} style={{ transitionDelay: '400ms' }}>
              <Button 
               variant="white" 
               fullWidth
               onClick={() => {
-                  handleContactClick();
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                   setIsMobileMenuOpen(false);
               }}
             >

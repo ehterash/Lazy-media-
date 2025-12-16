@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 
 export const CustomCursor: React.FC = () => {
@@ -34,6 +33,13 @@ export const CustomCursor: React.FC = () => {
 
   return (
     <>
+      <style>{`
+        @keyframes spin-slow {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+      
       {/* Main Cursor Dot */}
       <div 
         className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference transition-transform duration-100 ease-out will-change-transform"
@@ -42,13 +48,15 @@ export const CustomCursor: React.FC = () => {
         }}
       />
       
-      {/* Trailing Glow Ring - Slower Transition (duration-700) */}
+      {/* Trailing Ring */}
       <div 
-        className={`fixed top-0 left-0 w-12 h-12 border-2 border-purple-500 rounded-full pointer-events-none z-[9998] transition-all duration-700 ease-out will-change-transform ${isClicking ? 'scale-50 bg-purple-500/50' : 'scale-100'}`}
+        className={`fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none z-[9998] transition-all duration-500 ease-out will-change-transform border border-white/20 ${isClicking ? 'scale-50 opacity-80' : 'scale-100 opacity-100'}`}
         style={{ 
-          transform: `translate(${position.x - 24}px, ${position.y - 24}px) scale(${isPointer ? 1.5 : 1})`,
-          opacity: isClicking ? 0.8 : 0.5,
-          filter: 'blur(1px)'
+          // Center the ring
+          left: position.x - 24,
+          top: position.y - 24,
+          transform: `scale(${isPointer ? 1.5 : 1})`,
+          background: 'rgba(255, 255, 255, 0.03)',
         }}
       />
     </>
